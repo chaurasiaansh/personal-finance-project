@@ -1,6 +1,15 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
+import pathlib
+
+# function to load css 
+def load_css(file_path):
+    with open(file_path) as f:
+        st.html(f"<style>{f.read()}</style>")
+
+css_path = pathlib.Path("assets/style.css")      #loading css
+load_css(css_path)
 
 # Class for Fixed Deposit Calculation
 class FixedDeposit:
@@ -8,7 +17,7 @@ class FixedDeposit:
         st.title("💰 Fixed Deposit Interest Calculator")
         st.write("Select the tenure for your FD investment:")
         
-        self.tenure = st.selectbox("Choose Tenure:", [1, 3, 5])
+        self.tenure = st.selectbox("Choose Tenure:", [1, 3, 5], key="fd_tenure")
         self.show_bank_options()
 
     def show_bank_options(self):
@@ -23,9 +32,9 @@ class FixedDeposit:
         for bank, rate in interest_rates[self.tenure].items():
             st.write(f"🏦 {bank}: **{rate}% p.a**")
 
-        self.amount = st.number_input(f"💰 Enter the amount you want to invest for {self.tenure} years:", min_value=1000.0)
+        self.amount = st.number_input(f"💰 Enter the amount you want to invest for {self.tenure} years:", min_value=1000.0 , key="fd_amount")
         
-        if st.button("📊 Calculate FD Returns"):
+        if st.button("📊 Calculate FD Returns", key="fd_return_button"):
             self.fd_return(interest_rates[self.tenure])
 
     def fd_return(self, interest_rates):
